@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServiceRecord.Core.WebAPI.DatabaseContext;
 
@@ -11,9 +12,10 @@ using ServiceRecord.Core.WebAPI.DatabaseContext;
 namespace ServiceRecord.Core.WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240131014124_SubJobType_rename_fk")]
+    partial class SubJobType_rename_fk
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -38,7 +40,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
                     b.HasKey("CustomerCode");
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.Job", b =>
@@ -81,7 +83,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
                     b.HasIndex("CustomerCode");
 
-                    b.ToTable("Jobs", (string)null);
+                    b.ToTable("Jobs");
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.JobCorrespondent", b =>
@@ -112,7 +114,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
                     b.HasIndex("JobID");
 
-                    b.ToTable("JobCorrespondents", (string)null);
+                    b.ToTable("JobCorrespondents");
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.JobResourceType", b =>
@@ -134,7 +136,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
                     b.HasIndex("ResourceTypeID");
 
-                    b.ToTable("JobResourceTypes", (string)null);
+                    b.ToTable("JobResourceTypes");
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.JobSubJob", b =>
@@ -150,7 +152,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
                     b.HasKey("JobID", "SubJobID");
 
-                    b.ToTable("JobSubJobs", (string)null);
+                    b.ToTable("JobSubJobs");
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.ResourceType", b =>
@@ -170,14 +172,14 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                         .HasPrecision(6, 2)
                         .HasColumnType("decimal(6,2)");
 
-                    b.Property<string>("ResourceDescShort")
+                    b.Property<string>("resourceType")
                         .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
                     b.HasKey("ResourceTypeID");
 
-                    b.ToTable("ResourceTypes", (string)null);
+                    b.ToTable("ResourceTypes");
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.SubJobType", b =>
@@ -203,7 +205,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
                     b.HasIndex("JobSubJobJobID", "JobSubJobSubJobID");
 
-                    b.ToTable("SubJobTypes", (string)null);
+                    b.ToTable("SubJobTypes");
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.Job", b =>

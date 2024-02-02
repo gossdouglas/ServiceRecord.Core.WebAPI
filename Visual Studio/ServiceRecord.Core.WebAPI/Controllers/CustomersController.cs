@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -21,118 +22,126 @@ namespace ServiceRecord.Core.WebAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Customers
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Customer>>> GetCustomers()
+        [Route("GetCustomers")]
+        public ReturnObject<List<Customer>> GetCustomers()
         {
+            List<Customer> list = new List<Customer>();
+
           if (_context.Customers == null)
           {
-              return NotFound();
-          }
-            return await _context.Customers.ToListAsync();
-        }
-
-        // GET: api/Customers/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetCustomer(string id)
-        {
-          if (_context.Customers == null)
-          {
-              return NotFound();
-          }
-            var customer = await _context.Customers.FindAsync(id);
-
-            if (customer == null)
-            {
-                return NotFound();
+                //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
+                return new ReturnObject<List<Customer>>() { Success = false, Data = list, Validated = true, ReturnCode = 1 };
             }
 
-            return customer;
+            list = _context.Customers.ToList();
+
+            return new ReturnObject<List<Customer>>() { Success = true, Data = list, Validated = true };
         }
 
-        // PUT: api/Customers/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutCustomer(string id, Customer customer)
+        [HttpPost]
+        [Route("UpdateCustomer")]
+        public ReturnObject<Customer> UpdateCustomer(Customer customer)
         {
-            if (id != customer.CustomerCode)
-            {
-                return BadRequest();
-            }
-
             _context.Entry(customer).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                _context.SaveChangesAsync();
             }
-            catch (DbUpdateConcurrencyException)
+            catch (DbUpdateConcurrencyException e)
             {
-                if (!CustomerExists(id))
+                if (!CustomerExists(customer.CustomerCode))
                 {
-                    return NotFound();
+                    //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
+                    return new ReturnObject<Customer>() { Success = false, Data = customer, Validated = true, ReturnCode = 2 };
                 }
                 else
                 {
-                    throw;
+                    //throw;
+                    return new ReturnObject<Customer>() { Success = false, Data = customer, Validated = true, Message = e.Message };
                 }
             }
 
-            return NoContent();
+            return new ReturnObject<Customer>() { Success = true, Data = customer, Validated = true };
         }
 
-        // POST: api/Customers
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Customer>> PostCustomer(Customer customer)
-        {
-          if (_context.Customers == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Customers'  is null.");
-          }
-            _context.Customers.Add(customer);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (CustomerExists(customer.CustomerCode))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return CreatedAtAction("GetCustomer", new { id = customer.CustomerCode }, customer);
-        }
-
-        // DELETE: api/Customers/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCustomer(string id)
+        [Route("AddCustomer")]
+        public ReturnObject<Customer> AddCustomer(Customer customer)
         {
             if (_context.Customers == null)
             {
-                return NotFound();
+                //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
+                return new ReturnObject<Customer>() { Success = false, Data = customer, Validated = true, ReturnCode = 1 };
             }
-            var customer = await _context.Customers.FindAsync(id);
+
+            _context.Customers.Add(customer);
+            try
+            {
+                _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                //if the customer already exists...
+                if (CustomerExists(customer.CustomerCode))
+                {
+                    //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
+                    return new ReturnObject<Customer>() { Success = false, Data = customer, Validated = true, ReturnCode = 3 };
+                }
+                else
+                {  
+                    return new ReturnObject<Customer>() { Success = false, Data = customer, Validated = true, Message = e.Message };
+                }
+            }
+
+            return new ReturnObject<Customer>() { Success = true, Data = customer, Validated = true };
+        }
+
+        [HttpPost]
+        [Route("DeleteCustomer")]
+        public ReturnObject<Customer> DeleteCustomer(string id)
+        {
+            if (_context.Customers == null)
+            {
+                //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
+                return new ReturnObject<Customer>() { Success = false, Data = null, Validated = true, ReturnCode = 1 };
+            }
+
+            var customer = _context.Customers.Find(id);
             if (customer == null)
             {
-                return NotFound();
+                //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
+                return new ReturnObject<Customer>() { Success = false, Data = customer, Validated = true, ReturnCode = 2 };
             }
 
             _context.Customers.Remove(customer);
-            await _context.SaveChangesAsync();
+            _context.SaveChangesAsync();
 
-            return NoContent();
+            return new ReturnObject<Customer>() { Success = true, Data = customer, Validated = true };
         }
 
         private bool CustomerExists(string id)
         {
             return (_context.Customers?.Any(e => e.CustomerCode == id)).GetValueOrDefault();
         }
+
+        //// GET: api/Customers/5
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<Customer>> GetCustomer(string id)
+        //{
+        //  if (_context.Customers == null)
+        //  {
+        //      return NotFound();
+        //  }
+        //    var customer = await _context.Customers.FindAsync(id);
+
+        //    if (customer == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return customer;
+        //}
     }
 }

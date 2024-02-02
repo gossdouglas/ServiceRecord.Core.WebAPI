@@ -12,7 +12,6 @@ using ServiceRecord.Core.WebAPI.Models.View_Models;
 namespace ServiceRecord.Core.WebAPI.Controllers
 {
     [Route("api/[controller]")]
-    //[Route("api/[controller]/[action]")]
     [ApiController]
     public class JobsController : ControllerBase
     {

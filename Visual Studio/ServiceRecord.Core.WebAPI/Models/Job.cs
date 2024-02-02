@@ -10,6 +10,8 @@ namespace ServiceRecord.Core.WebAPI.Models
         public string? JobID { get; set; }
         //a key of job id can have many job correspondents
         public virtual ICollection<JobCorrespondent>? JobCorrespondents { get; set; }
+        //a key of job id can have many job sub jobs
+        //public virtual ICollection<JobSubJob>? JobSubJobs { get; set; }
 
         //a key of job id can have only one customer code from table customer
         [ForeignKey("CustomerCode")]
