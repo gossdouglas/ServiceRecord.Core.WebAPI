@@ -1,18 +1,19 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.Extensions.Hosting;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Reflection.Metadata;
 
 namespace ServiceRecord.Core.WebAPI.Models
 {
     public class Customer
     {
-        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        //public int CustomerId { get; set; }
-
         [Key]
         [StringLength(4)]
-        public string? CustomerCode { get; set; }
-        //a key of CustomerCode can have many jobs
-        //public ICollection<Job>? Jobs { get; set; }
+        public string CustomerId { get; set; } = string.Empty;
+        //one CustomerId can have many jobs
+        //Collection navigation containing dependents
+        public ICollection<Job> Jobs { get; } = new List<Job>();
+        //https://learn.microsoft.com/en-us/ef/core/modeling/relationships/one-to-many
 
         [StringLength(50)]
         public string? CustomerName { get; set; }

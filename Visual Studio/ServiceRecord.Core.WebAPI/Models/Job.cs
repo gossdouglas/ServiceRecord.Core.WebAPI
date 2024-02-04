@@ -9,12 +9,12 @@ namespace ServiceRecord.Core.WebAPI.Models
         [StringLength(8)]
         public string? JobID { get; set; }
 
-        //a key of job id can have only one customer code from table customer
-        //[ForeignKey("CustomerCode")]
-        //public Customer? Customer { get; set; }
-
         [StringLength(4)]
-        public string? CustomerCode { get; set; }
+        public string CustomerId { get; set; } = string.Empty;
+        //one JobID can have one CustomerId
+        // Required reference navigation to principal
+        public Customer? Customer { get; set; }
+        //https://learn.microsoft.com/en-us/ef/core/modeling/relationships/one-to-many
 
         [StringLength(50)]
         public string? CustomerContact { get; set; }
@@ -26,9 +26,9 @@ namespace ServiceRecord.Core.WebAPI.Models
         [StringLength(255)]
         public string? Location { get; set; }
 
-        public TimeOnly? NormalHoursStart { get; set; }
+        public DateTime? NormalHoursStart { get; set; }
 
-        public TimeOnly? NormalHoursEnd { get; set; }
+        public DateTime? NormalHoursEnd { get; set; }
 
         public int NormalHoursDaily { get; set; }
 
@@ -40,5 +40,6 @@ namespace ServiceRecord.Core.WebAPI.Models
         //public virtual ICollection<JobSubJob>? JobSubJobs { get; set; }
 
         public virtual ICollection<DailyReport>? DailyReports { get; set; }
+        public virtual ICollection<JobSubJob>? JobSubJob { get; set; }
     }
 }

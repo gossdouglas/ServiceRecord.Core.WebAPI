@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServiceRecord.Core.WebAPI.DatabaseContext;
 
@@ -11,9 +12,10 @@ using ServiceRecord.Core.WebAPI.DatabaseContext;
 namespace ServiceRecord.Core.WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240204155621_unknown")]
+    partial class unknown
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -395,17 +397,6 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                     b.Navigation("Job");
                 });
 
-            modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.JobSubJob", b =>
-                {
-                    b.HasOne("ServiceRecord.Core.WebAPI.Models.Job", "Job")
-                        .WithMany("JobSubJob")
-                        .HasForeignKey("JobID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Job");
-                });
-
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.SubJobType", b =>
                 {
                     b.HasOne("ServiceRecord.Core.WebAPI.Models.JobSubJob", "JobSubJob")
@@ -439,8 +430,6 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                     b.Navigation("DailyReports");
 
                     b.Navigation("JobCorrespondents");
-
-                    b.Navigation("JobSubJob");
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.JobSubJob", b =>

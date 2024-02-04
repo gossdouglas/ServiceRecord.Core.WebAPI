@@ -5,22 +5,43 @@ namespace ServiceRecord.Core.WebAPI.Models.View_Models
 {
     public class VmJob
     {
-        //public List<tbl_Jobs> lstJobs { get; set; }
+        //public class Job {
 
-        //public List<vmCustomerInfo> lstCustomers { get; set; }
+        //    public string? JobID { get; set; }
 
-        //public List<vmSubJobTypes> lstSubJobTypes { get; set; }
-        //public List<vmResourceTypes> lstResourceTypes { get; set; }
+        //    public string CustomerId { get; set; } = string.Empty;
 
-        public Job? job { get; set; }
-        //public string[]? arrJobSubJobsAdd { get; set; }
-        //public string[] arrJobSubJobsDelete { get; set; }
+        //    public string? CustomerContact { get; set; }
 
-        //public List<ResourceType>? lstResourceTypesAdd { get; set; }
-        //public List<ResourceType> lstResourceTypesDelete { get; set; }
-        //public List<ResourceType> lstResourceTypesEdit { get; set; }
-        //public List<JobCorrespondent> lstJobCrspdtInfoAdd { get; set; }
-        //public List<JobCorrespondent lstJobCrspdtInfoDelete { get; set; }
-        //public List<JobCorrespondent> lstJobCrspdtInfoEdit { get; set; }
+        //    public string? Description { get; set; }
+
+        //    public bool Active { get; set; }
+
+        //    public string? Location { get; set; }
+
+        //    public DateTime? NormalHoursStart { get; set; }
+
+        //    public DateTime? NormalHoursEnd { get; set; }
+
+        //    public int NormalHoursDaily { get; set; }
+
+        //    public Boolean DoubleTimeHours { get; set; }
+
+        //    public List<VmJobSubJob>? JobSubJobAdd { get; set; }
+        //}
+
+        //public ViJob? Job { get; set; }
+
+
+        /// <summary>
+        /// ////////////////
+        /// </summary>
+        public Job? Job { get; set; }
+
+        //list of sub jobs to add to this job
+        public List<JobSubJob>? JobSubJobAdd { get; set; }
+        //public List<VmJobSubJob>? JobSubJobAdd { get; set; }
+
+
     }
 }

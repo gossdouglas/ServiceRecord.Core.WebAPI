@@ -9,6 +9,7 @@ namespace ServiceRecord.Core.WebAPI.Models
         [Column(Order = 0)]
         [StringLength(8)]
         public string? JobID { get; set; }
+        public Job? Job { get; set; }
 
         [Key]
         [Column(Order = 1)]

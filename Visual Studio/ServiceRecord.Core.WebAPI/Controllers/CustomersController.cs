@@ -51,7 +51,7 @@ namespace ServiceRecord.Core.WebAPI.Controllers
             }
             catch (DbUpdateConcurrencyException e)
             {
-                if (!CustomerExists(customer.CustomerCode))
+                if (!CustomerExists(customer.CustomerId))
                 {
                     //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
                     return new ReturnObject<Customer>() { Success = false, Data = customer, Validated = true, ReturnCode = 2 };
@@ -84,7 +84,7 @@ namespace ServiceRecord.Core.WebAPI.Controllers
             catch (DbUpdateException e)
             {
                 //if the customer already exists...
-                if (CustomerExists(customer.CustomerCode))
+                if (CustomerExists(customer.CustomerId))
                 {
                     //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
                     return new ReturnObject<Customer>() { Success = false, Data = customer, Validated = true, ReturnCode = 3 };
@@ -123,7 +123,7 @@ namespace ServiceRecord.Core.WebAPI.Controllers
 
         private bool CustomerExists(string id)
         {
-            return (_context.Customers?.Any(e => e.CustomerCode == id)).GetValueOrDefault();
+            return (_context.Customers?.Any(e => e.CustomerId == id)).GetValueOrDefault();
         }
 
         //// GET: api/Customers/5

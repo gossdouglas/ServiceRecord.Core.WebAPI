@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServiceRecord.Core.WebAPI.DatabaseContext;
 
@@ -11,9 +12,10 @@ using ServiceRecord.Core.WebAPI.DatabaseContext;
 namespace ServiceRecord.Core.WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240204004026_Job_remove_customerCode")]
+    partial class Job_remove_customerCode
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,7 +26,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.Customer", b =>
                 {
-                    b.Property<string>("CustomerId")
+                    b.Property<string>("CustomerCode")
                         .HasMaxLength(4)
                         .HasColumnType("nvarchar(4)");
 
@@ -36,7 +38,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.HasKey("CustomerId");
+                    b.HasKey("CustomerCode");
 
                     b.ToTable("Customers");
                 });
@@ -168,11 +170,6 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("CustomerId")
-                        .IsRequired()
-                        .HasMaxLength(4)
-                        .HasColumnType("nvarchar(4)");
-
                     b.Property<string>("Description")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
@@ -194,8 +191,6 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("JobID");
-
-                    b.HasIndex("CustomerId");
 
                     b.ToTable("Jobs");
                 });
@@ -360,17 +355,6 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.Job", b =>
-                {
-                    b.HasOne("ServiceRecord.Core.WebAPI.Models.Customer", "Customer")
-                        .WithMany("Jobs")
-                        .HasForeignKey("CustomerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Customer");
-                });
-
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.JobCorrespondent", b =>
                 {
                     b.HasOne("ServiceRecord.Core.WebAPI.Models.Job", null)
@@ -395,17 +379,6 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                     b.Navigation("Job");
                 });
 
-            modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.JobSubJob", b =>
-                {
-                    b.HasOne("ServiceRecord.Core.WebAPI.Models.Job", "Job")
-                        .WithMany("JobSubJob")
-                        .HasForeignKey("JobID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Job");
-                });
-
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.SubJobType", b =>
                 {
                     b.HasOne("ServiceRecord.Core.WebAPI.Models.JobSubJob", "JobSubJob")
@@ -413,11 +386,6 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                         .HasForeignKey("JobSubJobJobID", "JobSubJobSubJobID");
 
                     b.Navigation("JobSubJob");
-                });
-
-            modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.Customer", b =>
-                {
-                    b.Navigation("Jobs");
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.DailyReport", b =>
@@ -439,8 +407,6 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                     b.Navigation("DailyReports");
 
                     b.Navigation("JobCorrespondents");
-
-                    b.Navigation("JobSubJob");
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.JobSubJob", b =>

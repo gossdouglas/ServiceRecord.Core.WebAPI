@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ServiceRecord.Core.WebAPI.Models;
+using System.Reflection.Metadata;
 
 namespace ServiceRecord.Core.WebAPI.DatabaseContext
 {
@@ -49,6 +50,12 @@ namespace ServiceRecord.Core.WebAPI.DatabaseContext
             //Composite primary keys can only be set using 'HasKey' in 'OnModelCreating'
             modelBuilder.Entity<DailyReportTimeEntryUser>()
             .HasKey(x => new { x.TimeEntryID, x.UserName });
+
+            //modelBuilder.Entity<Customer>()
+            //.HasMany(e => e.Jobs)
+            //.WithOne(e => e.Customer)
+            //.HasForeignKey(e => e.CustomerId)
+            //.IsRequired();
 
         }
     }

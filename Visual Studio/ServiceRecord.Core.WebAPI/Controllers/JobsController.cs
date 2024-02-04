@@ -125,8 +125,11 @@ namespace ServiceRecord.Core.WebAPI.Controllers
 
         [HttpPost]
         [Route("AddJob")]
-        public ReturnObject<VmJob> AddJob(VmJob data)
+        public ReturnObject<VmJob> AddJob(VmJob? data)
         {
+            VmJob incomingDataCopy = new VmJob();
+            incomingDataCopy = data;
+
             if (_context.Jobs == null)
             {
                 //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
@@ -136,21 +139,52 @@ namespace ServiceRecord.Core.WebAPI.Controllers
             try
             {
                 //save if doesn't exist
-                if (!JobExists(data.job.JobID))
+                if (!JobExists(data.Job.JobID))
                 {
-                    _context.Jobs.Add(data.job);
-                    _context.SaveChangesAsync();
+                    _context.Jobs.Add(data.Job);
+                    //_context.SaveChangesAsync();
+                    //_context.SaveChanges();
                 }
                 else
                 {
                     //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
                     return new ReturnObject<VmJob>() { Success = false, Data = data, Validated = true, ReturnCode = 3 };
-                }                
+                }
+
+                if (data.JobSubJobAdd != null)
+                {
+                    //foreach (JobSubJob item in data.JobSubJobAdd)
+                    //{                        
+                    //        _context.JobSubJobs.Add(item);
+                    //        _context.SaveChanges();                       
+                    //}
+
+                    foreach (JobSubJob item in data.JobSubJobAdd)
+                    {
+                        //save if doesn't exist
+                        if (!JobSubJobExists(item.JobID, item.SubJobID))
+                        {
+                            _context.JobSubJobs.Add(item);
+                            //_context.SaveChangesAsync();
+                            //_context.SaveChanges();
+                        }
+                        else
+                        {
+                            //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
+                            return new ReturnObject<VmJob>() { Success = false, Data = data, Validated = true, ReturnCode = 3 };
+                        }
+                    }
+
+                    //save changes to the JobSubJob table
+                    //_context.SaveChanges();
+                }
+
             }
             catch (DbUpdateException e)
             {               
                     return new ReturnObject<VmJob>() { Success = false, Data = data, Validated = true, Message = e.Message };
             }
+            _context.SaveChanges();
 
             return new ReturnObject<VmJob>() { Success = true, Data = data, Validated = true };
         }
@@ -178,29 +212,16 @@ namespace ServiceRecord.Core.WebAPI.Controllers
             return new ReturnObject<Job>() { Success = true, Data = item, Validated = true };
         }
 
-        //// DELETE: api/Jobs/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteJob(string id)
-        //{
-        //    if (_context.Jobs == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    var job = await _context.Jobs.FindAsync(id);
-        //    if (job == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _context.Jobs.Remove(job);
-        //    await _context.SaveChangesAsync();
-
-        //    return NoContent();
-        //}
-
         private bool JobExists(string id)
         {
             return (_context.Jobs?.Any(e => e.JobID == id)).GetValueOrDefault();
+        }
+
+        private bool JobSubJobExists(string jobId, int subJobId)
+        {
+            //return whether there are any records in the JobSubJobs table that have the passed jobId and subJobId
+            return (_context.JobSubJobs?.Any(e => e.JobID == jobId)).GetValueOrDefault() 
+                && (_context.JobSubJobs?.Any(e => e.SubJobID == subJobId)).GetValueOrDefault();
         }
     }
 }
