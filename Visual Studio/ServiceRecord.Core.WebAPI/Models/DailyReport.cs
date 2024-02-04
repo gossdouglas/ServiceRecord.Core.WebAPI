@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ServiceRecord.Core.WebAPI.Models
@@ -8,6 +9,7 @@ namespace ServiceRecord.Core.WebAPI.Models
         [Key]
         public int DailyReportID { get; set; }
 
+        [ForeignKey("JobID")]
         [StringLength(8)]
         public string? JobID { get; set; }
 
@@ -23,6 +25,7 @@ namespace ServiceRecord.Core.WebAPI.Models
 
         public TimeSpan EndTime { get; set; }
 
+        [Precision(4, 2)]
         public decimal LunchHours { get; set; }   
 
         [StringLength(16)]
@@ -31,5 +34,14 @@ namespace ServiceRecord.Core.WebAPI.Models
         public int SubmissionStatus { get; set; }
 
         //public virtual ICollection<tbl_dailyReportUsers> tbl_dailyReportUsers { get; set; }
+
+        //DailyReport is a primary table for DailyReportTimeEntry table
+        public virtual ICollection<DailyReportTimeEntry>? DailyReportTimeEntry { get; set; }
+
+        //DailyReport is a primary table for DailyReportTimeEntry table
+        public virtual ICollection<DailyReportUser>? DailyReportUser { get; set; }
+
+        //DailyReport is a primary table for DailyReportTimeEntry table
+        public virtual ICollection<DailyReportTimeEntryUser>? DailyReportTimeEntryUser { get; set; }
     }
 }

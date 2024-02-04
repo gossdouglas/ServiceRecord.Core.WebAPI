@@ -10,7 +10,7 @@ namespace ServiceRecord.Core.WebAPI.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ResourceTypeID { get; set; }
 
-        //open a channel to table JobResourceTypes
+        //ResourceType is a primary table for JobResourceType table
         public virtual ICollection<JobResourceType>? JobResourceTypes { get; set; }
 
         [Required]

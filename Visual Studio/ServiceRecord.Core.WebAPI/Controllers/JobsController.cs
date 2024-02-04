@@ -82,66 +82,121 @@ namespace ServiceRecord.Core.WebAPI.Controllers
             return NoContent();
         }
 
-        // POST: api/Jobs
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPost]
-        public async Task<ActionResult<Job>> PostJob(Job job)
-        {
-          if (_context.Jobs == null)
-          {
-              return Problem("Entity set 'ApplicationDbContext.Jobs'  is null.");
-          }
-            _context.Jobs.Add(job);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (JobExists(job.JobID))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+        //// POST: api/Jobs
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPost]
+        //public async Task<ActionResult<Job>> PostJob(Job job)
+        //{
+        //  if (_context.Jobs == null)
+        //  {
+        //      return Problem("Entity set 'ApplicationDbContext.Jobs'  is null.");
+        //  }
+        //    _context.Jobs.Add(job);
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateException)
+        //    {
+        //        if (JobExists(job.JobID))
+        //        {
+        //            return Conflict();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
 
-            return CreatedAtAction("GetJob", new { id = job.JobID }, job);
-        }
+        //    return CreatedAtAction("GetJob", new { id = job.JobID }, job);
+        //}
+
+        //[HttpPost]
+        //[Route("AddJob")]
+        //public JsonResult AddJob()
+        //{
+        //    Job job = new Job();
+
+        //    job.Active = true;
+
+
+        //    return new JsonResult((new ReturnObject<Job>() { Success = false, Data = job, Validated = true }));
+        //}
 
         [HttpPost]
         [Route("AddJob")]
-        public JsonResult AddJob()
-        {
-            Job job = new Job();
-
-            job.Active = true;
-
-
-            return new JsonResult((new ReturnObject<Job>() { Success = false, Data = job, Validated = true }));
-        }
-
-        // DELETE: api/Jobs/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteJob(string id)
+        public ReturnObject<VmJob> AddJob(VmJob data)
         {
             if (_context.Jobs == null)
             {
-                return NotFound();
+                //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
+                return new ReturnObject<VmJob>() { Success = false, Data = data, Validated = true, ReturnCode = 1 };
             }
-            var job = await _context.Jobs.FindAsync(id);
-            if (job == null)
+
+            try
             {
-                return NotFound();
+                //save if doesn't exist
+                if (!JobExists(data.job.JobID))
+                {
+                    _context.Jobs.Add(data.job);
+                    _context.SaveChangesAsync();
+                }
+                else
+                {
+                    //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
+                    return new ReturnObject<VmJob>() { Success = false, Data = data, Validated = true, ReturnCode = 3 };
+                }                
+            }
+            catch (DbUpdateException e)
+            {               
+                    return new ReturnObject<VmJob>() { Success = false, Data = data, Validated = true, Message = e.Message };
             }
 
-            _context.Jobs.Remove(job);
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return new ReturnObject<VmJob>() { Success = true, Data = data, Validated = true };
         }
+
+        [HttpPost]
+        [Route("DeleteJob")]
+        public ReturnObject<Job> DeleteJob(string id)
+        {
+            if (_context.Jobs == null)
+            {
+                //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
+                return new ReturnObject<Job>() { Success = false, Data = null, Validated = true, ReturnCode = 1 };
+            }
+
+            var item = _context.Jobs.Find(id);
+            if (item == null)
+            {
+                //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
+                return new ReturnObject<Job>() { Success = false, Data = item, Validated = true, ReturnCode = 2 };
+            }
+
+            _context.Jobs.Remove(item);
+            _context.SaveChangesAsync();
+
+            return new ReturnObject<Job>() { Success = true, Data = item, Validated = true };
+        }
+
+        //// DELETE: api/Jobs/5
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteJob(string id)
+        //{
+        //    if (_context.Jobs == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var job = await _context.Jobs.FindAsync(id);
+        //    if (job == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    _context.Jobs.Remove(job);
+        //    await _context.SaveChangesAsync();
+
+        //    return NoContent();
+        //}
 
         private bool JobExists(string id)
         {

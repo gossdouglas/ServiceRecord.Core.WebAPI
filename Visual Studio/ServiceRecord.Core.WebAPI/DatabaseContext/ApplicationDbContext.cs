@@ -25,6 +25,11 @@ namespace ServiceRecord.Core.WebAPI.DatabaseContext
         public virtual DbSet<ResourceType>? ResourceTypes { get; set; }
         public virtual DbSet<JobResourceType>? JobResourceTypes { get; set; }
 
+        public virtual DbSet<DailyReport>? DailyReport { get; set; }
+        public virtual DbSet<DailyReportUser>? DailyReportUsers { get; set; }
+        public virtual DbSet<DailyReportTimeEntryUser>? DailyReportTimeEntryUsers { get; set; }
+        public virtual DbSet<DailyReportTimeEntry>? DailyReportTimeEntrys { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -36,6 +41,14 @@ namespace ServiceRecord.Core.WebAPI.DatabaseContext
             //Composite primary keys can only be set using 'HasKey' in 'OnModelCreating'
             modelBuilder.Entity<JobSubJob>()
             .HasKey(x => new { x.JobID, x.SubJobID });
+
+            //Composite primary keys can only be set using 'HasKey' in 'OnModelCreating'
+            modelBuilder.Entity<DailyReportUser>()
+            .HasKey(x => new { x.DailyReportID, x.UserName });
+
+            //Composite primary keys can only be set using 'HasKey' in 'OnModelCreating'
+            modelBuilder.Entity<DailyReportTimeEntryUser>()
+            .HasKey(x => new { x.TimeEntryID, x.UserName });
 
         }
     }

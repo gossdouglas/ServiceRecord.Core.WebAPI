@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServiceRecord.Core.WebAPI.DatabaseContext;
 
@@ -11,9 +12,10 @@ using ServiceRecord.Core.WebAPI.DatabaseContext;
 namespace ServiceRecord.Core.WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240203201617_DailyReport-ForeignKeys_add")]
+    partial class DailyReportForeignKeys_add
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -165,34 +167,35 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("CustomerCode")
-                        .HasMaxLength(4)
                         .HasColumnType("nvarchar(4)");
 
                     b.Property<string>("CustomerContact")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<bool>("DblTimeHours")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
-
-                    b.Property<bool>("DoubleTimeHours")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Location")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int>("NormalHoursDaily")
+                    b.Property<int>("NrmlHoursDaily")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("NormalHoursEnd")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("NrmlHoursEnd")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("NormalHoursStart")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("NrmlHoursStart")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("JobID");
+
+                    b.HasIndex("CustomerCode");
 
                     b.ToTable("Jobs");
                 });
@@ -355,6 +358,15 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                         .HasForeignKey("DailyReportID")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.Job", b =>
+                {
+                    b.HasOne("ServiceRecord.Core.WebAPI.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerCode");
+
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.JobCorrespondent", b =>

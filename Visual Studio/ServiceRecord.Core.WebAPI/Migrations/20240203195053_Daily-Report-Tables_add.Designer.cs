@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServiceRecord.Core.WebAPI.DatabaseContext;
 
@@ -11,9 +12,10 @@ using ServiceRecord.Core.WebAPI.DatabaseContext;
 namespace ServiceRecord.Core.WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240203195053_Daily-Report-Tables_add")]
+    partial class DailyReportTables_add
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -84,8 +86,6 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
                     b.HasKey("DailyReportID");
 
-                    b.HasIndex("JobID");
-
                     b.ToTable("DailyReport");
                 });
 
@@ -113,8 +113,6 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
                     b.HasKey("TimeEntryID");
 
-                    b.HasIndex("DailyReportID");
-
                     b.ToTable("DailyReportTimeEntrys");
                 });
 
@@ -129,12 +127,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                         .HasColumnType("nvarchar(16)")
                         .HasColumnOrder(1);
 
-                    b.Property<int?>("DailyReportID")
-                        .HasColumnType("int");
-
                     b.HasKey("TimeEntryID", "UserName");
-
-                    b.HasIndex("DailyReportID");
 
                     b.ToTable("DailyReportTimeEntryUsers");
                 });
@@ -165,34 +158,35 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("CustomerCode")
-                        .HasMaxLength(4)
                         .HasColumnType("nvarchar(4)");
 
                     b.Property<string>("CustomerContact")
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<bool>("DblTimeHours")
+                        .HasColumnType("bit");
+
                     b.Property<string>("Description")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
-
-                    b.Property<bool>("DoubleTimeHours")
-                        .HasColumnType("bit");
 
                     b.Property<string>("Location")
                         .HasMaxLength(255)
                         .HasColumnType("nvarchar(255)");
 
-                    b.Property<int>("NormalHoursDaily")
+                    b.Property<int>("NrmlHoursDaily")
                         .HasColumnType("int");
 
-                    b.Property<DateTime?>("NormalHoursEnd")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("NrmlHoursEnd")
+                        .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("NormalHoursStart")
-                        .HasColumnType("datetime2");
+                    b.Property<string>("NrmlHoursStart")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("JobID");
+
+                    b.HasIndex("CustomerCode");
 
                     b.ToTable("Jobs");
                 });
@@ -319,42 +313,13 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                     b.ToTable("SubJobTypes");
                 });
 
-            modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.DailyReport", b =>
+            modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.Job", b =>
                 {
-                    b.HasOne("ServiceRecord.Core.WebAPI.Models.Job", null)
-                        .WithMany("DailyReports")
-                        .HasForeignKey("JobID");
-                });
+                    b.HasOne("ServiceRecord.Core.WebAPI.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerCode");
 
-            modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.DailyReportTimeEntry", b =>
-                {
-                    b.HasOne("ServiceRecord.Core.WebAPI.Models.DailyReport", null)
-                        .WithMany("DailyReportTimeEntry")
-                        .HasForeignKey("DailyReportID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.DailyReportTimeEntryUser", b =>
-                {
-                    b.HasOne("ServiceRecord.Core.WebAPI.Models.DailyReport", null)
-                        .WithMany("DailyReportTimeEntryUser")
-                        .HasForeignKey("DailyReportID");
-
-                    b.HasOne("ServiceRecord.Core.WebAPI.Models.DailyReportTimeEntry", null)
-                        .WithMany("DailyReportTimeEntryUsers")
-                        .HasForeignKey("TimeEntryID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.DailyReportUser", b =>
-                {
-                    b.HasOne("ServiceRecord.Core.WebAPI.Models.DailyReport", null)
-                        .WithMany("DailyReportUser")
-                        .HasForeignKey("DailyReportID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Customer");
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.JobCorrespondent", b =>
@@ -390,24 +355,8 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                     b.Navigation("JobSubJob");
                 });
 
-            modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.DailyReport", b =>
-                {
-                    b.Navigation("DailyReportTimeEntry");
-
-                    b.Navigation("DailyReportTimeEntryUser");
-
-                    b.Navigation("DailyReportUser");
-                });
-
-            modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.DailyReportTimeEntry", b =>
-                {
-                    b.Navigation("DailyReportTimeEntryUsers");
-                });
-
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.Job", b =>
                 {
-                    b.Navigation("DailyReports");
-
                     b.Navigation("JobCorrespondents");
                 });
 
