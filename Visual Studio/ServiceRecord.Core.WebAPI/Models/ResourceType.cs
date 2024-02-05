@@ -13,13 +13,13 @@ namespace ServiceRecord.Core.WebAPI.Models
         //ResourceType is a primary table for JobResourceType table
         public virtual ICollection<JobResourceType>? JobResourceTypes { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(50)]
         public string? ResourceDescShort { get; set; }
 
-        [Required]
+        //[Required]
         [StringLength(50)]
-        public string? Description { get; set; }
+        public string? Description { get; set; } 
         [Precision(6, 2)]
         public decimal Rate { get; set; }
     }

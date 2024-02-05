@@ -11,6 +11,8 @@ namespace ServiceRecord.Core.WebAPI.Models
 
         //a key of JobCorrespondentID can have only one JobID from table job
         [ForeignKey("JobID")]
+        [StringLength(8)]
+        public string? JobID { get; set; }
         //public Job? Job { get; set; }
 
         [Required]

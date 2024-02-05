@@ -126,19 +126,33 @@ namespace ServiceRecord.Core.WebAPI.Controllers
                 }
 
                 //save outrightly because there is no chance there will be a duplicate jobId and subJobId due to the logic above
-                if (data.JobSubJobAdd != null && _context.JobSubJobs != null)
+                if (data.JobSubJobListAdd != null && _context.JobSubJobs != null)
                 {
-                    _context.JobSubJobs.AddRange(data.JobSubJobAdd);
+                    _context.JobSubJobs.AddRange(data.JobSubJobListAdd);
                 }
 
-                //save changes in the end
-                _context.SaveChanges();
+                //save outrightly because there is no chance there will be a duplicate jobId and subJobId due to the logic above
+                if (data.JobResourceTypeListAdd != null && _context.JobResourceTypes != null)
+                {
+                    _context.JobResourceTypes.AddRange(data.JobResourceTypeListAdd);
+                }
+
+                //save outrightly because there is no chance there will be a duplicate jobId and subJobId due to the logic above
+                if (data.JobCorrespondentListAdd != null && _context.JobCorrespondents != null)
+                {
+                    //_context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.JobCorrespondents ON");
+                    _context.JobCorrespondents.AddRange(data.JobCorrespondentListAdd);
+                    //_context.Database.ExecuteSqlRaw("SET IDENTITY_INSERT dbo.JobCorrespondents OFF");
+                }
             }
             //return upon exception
             catch (DbUpdateException e)
             {               
-                    return new ReturnObject<VmJob>() { Success = false, Data = data, Validated = true, Message = e.Message };
+                    return new ReturnObject<VmJob>() { Success = false, Data = null, Validated = true, Message = e.InnerException.ToString() };
             }
+
+            //save changes in the end
+            _context.SaveChanges();
 
             //return upon success
             return new ReturnObject<VmJob>() { Success = true, Data = null, Validated = true };

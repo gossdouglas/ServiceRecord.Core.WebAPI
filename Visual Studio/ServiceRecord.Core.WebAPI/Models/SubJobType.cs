@@ -11,7 +11,7 @@ namespace ServiceRecord.Core.WebAPI.Models
         public int SubJobID { get; set; }
 
         //open a channel to table JobSubJob
-        public JobSubJob? JobSubJob { get; set; }
+        //public JobSubJob? JobSubJob { get; set; }
 
         [Required]
         [StringLength(25)]
