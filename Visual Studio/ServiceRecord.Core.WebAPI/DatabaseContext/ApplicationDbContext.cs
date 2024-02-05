@@ -21,7 +21,7 @@ namespace ServiceRecord.Core.WebAPI.DatabaseContext
         public virtual DbSet<SubJobType>? SubJobTypes { get; set; }
 
         //level 2 tables
-        public virtual DbSet<JobSubJob>? JobSubJobs { get; set; }
+        public virtual DbSet<JobSubJobType>? JobSubJobTypes { get; set; }
 
         public virtual DbSet<ResourceType>? ResourceTypes { get; set; }
         public virtual DbSet<JobResourceType>? JobResourceTypes { get; set; }
@@ -40,7 +40,7 @@ namespace ServiceRecord.Core.WebAPI.DatabaseContext
             .HasKey(x => new { x.JobID, x.ResourceTypeID });
 
             //Composite primary keys can only be set using 'HasKey' in 'OnModelCreating'
-            modelBuilder.Entity<JobSubJob>()
+            modelBuilder.Entity<JobSubJobType>()
             .HasKey(x => new { x.JobID, x.SubJobID });
 
             //Composite primary keys can only be set using 'HasKey' in 'OnModelCreating'
@@ -62,6 +62,37 @@ namespace ServiceRecord.Core.WebAPI.DatabaseContext
             //.WithOne(e => e.Job)
             //.HasForeignKey(e => e.JobID)
             //.IsRequired();
+
+            modelBuilder.Entity<ResourceType>().HasData(
+            new ResourceType { ResourceDescShort = "CE", Description = "CONTROL ENGINEER", Rate = 250, ResourceTypeID = 1 },
+            new ResourceType { ResourceDescShort = "ME", Description = "MECHANICAL ENGINEER", Rate = 110, ResourceTypeID = 2 },
+            new ResourceType { ResourceDescShort = "EE", Description = "ELECTRICAL ENGINEER", Rate = 115, ResourceTypeID = 3 },
+            new ResourceType { ResourceDescShort = "GT", Description = "GENERAL TECHNICIAN", Rate = 120, ResourceTypeID = 4 },
+            new ResourceType { ResourceDescShort = "MT", Description = "MECHANICAL TECHNICIAN", Rate = 125, ResourceTypeID = 5 },
+            new ResourceType { ResourceDescShort = "ET", Description = "ELECTRICAL TECHNICIAN", Rate = 130, ResourceTypeID = 6 },
+            new ResourceType { ResourceDescShort = "SE", Description = "STRUCTURAL ENGINEER", Rate = 135, ResourceTypeID = 7 },
+            new ResourceType { ResourceDescShort = "ST", Description = "STRUCTUAL TECHNICIAN", Rate = 140, ResourceTypeID = 8 },
+            new ResourceType { ResourceDescShort = "FT", Description = "FABRICATION TECHNICIAN", Rate = 145, ResourceTypeID = 9 },
+            new ResourceType { ResourceDescShort = "WD", Description = "WELDER", Rate = 150, ResourceTypeID = 10 }
+        );
+
+            modelBuilder.Entity<SubJobType>().HasData(
+            new SubJobType { SubJobID = 1, Description = "Commissioning" },
+            new SubJobType { SubJobID = 2, Description = "Shutdown" },
+            new SubJobType { SubJobID = 3, Description = "SAT" },
+            new SubJobType { SubJobID = 4, Description = "General Support" },
+            new SubJobType { SubJobID = 5, Description = "Mechanical Install" },
+            new SubJobType { SubJobID = 6, Description = "Electrical Install" },
+            new SubJobType { SubJobID = 7, Description = "Startup/Commissioning" },
+            new SubJobType { SubJobID = 8, Description = "Engineering Discovery" },
+            new SubJobType { SubJobID = 9, Description = "Training Service" },
+            new SubJobType { SubJobID = 10, Description = "Audit/PM Service" },
+            new SubJobType { SubJobID = 11, Description = "Drawing Updates" },
+            new SubJobType { SubJobID = 12, Description = "Welding" },
+            new SubJobType { SubJobID = 13, Description = "Production Support" }
+
+
+        );
 
         }
     }

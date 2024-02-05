@@ -6,11 +6,13 @@ namespace ServiceRecord.Core.WebAPI.Models
     public class SubJobType
     {
         [Key]
-        [ForeignKey("SubJobID")]
+        //[ForeignKey("SubJobID")]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]      
         public int SubJobID { get; set; }
+        //open a channel to table SubJobTypes
+        public virtual ICollection<JobSubJobType>? JobSubJobTypes { get; set; }
 
-        //open a channel to table JobSubJob
+        ////open a channel to table JobSubJob
         //public JobSubJob? JobSubJob { get; set; }
 
         [Required]

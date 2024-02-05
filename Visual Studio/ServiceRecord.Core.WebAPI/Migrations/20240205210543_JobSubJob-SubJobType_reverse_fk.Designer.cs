@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServiceRecord.Core.WebAPI.DatabaseContext;
 
@@ -11,9 +12,10 @@ using ServiceRecord.Core.WebAPI.DatabaseContext;
 namespace ServiceRecord.Core.WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240205210543_JobSubJob-SubJobType_reverse_fk")]
+    partial class JobSubJobSubJobType_reverse_fk
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -217,7 +219,6 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                         .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("JobID")
-                        .IsRequired()
                         .HasMaxLength(8)
                         .HasColumnType("nvarchar(8)");
 
@@ -296,78 +297,6 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                     b.HasKey("ResourceTypeID");
 
                     b.ToTable("ResourceTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            ResourceTypeID = 1,
-                            Description = "CONTROL ENGINEER",
-                            Rate = 250m,
-                            ResourceDescShort = "CE"
-                        },
-                        new
-                        {
-                            ResourceTypeID = 2,
-                            Description = "MECHANICAL ENGINEER",
-                            Rate = 110m,
-                            ResourceDescShort = "ME"
-                        },
-                        new
-                        {
-                            ResourceTypeID = 3,
-                            Description = "ELECTRICAL ENGINEER",
-                            Rate = 115m,
-                            ResourceDescShort = "EE"
-                        },
-                        new
-                        {
-                            ResourceTypeID = 4,
-                            Description = "GENERAL TECHNICIAN",
-                            Rate = 120m,
-                            ResourceDescShort = "GT"
-                        },
-                        new
-                        {
-                            ResourceTypeID = 5,
-                            Description = "MECHANICAL TECHNICIAN",
-                            Rate = 125m,
-                            ResourceDescShort = "MT"
-                        },
-                        new
-                        {
-                            ResourceTypeID = 6,
-                            Description = "ELECTRICAL TECHNICIAN",
-                            Rate = 130m,
-                            ResourceDescShort = "ET"
-                        },
-                        new
-                        {
-                            ResourceTypeID = 7,
-                            Description = "STRUCTURAL ENGINEER",
-                            Rate = 135m,
-                            ResourceDescShort = "SE"
-                        },
-                        new
-                        {
-                            ResourceTypeID = 8,
-                            Description = "STRUCTUAL TECHNICIAN",
-                            Rate = 140m,
-                            ResourceDescShort = "ST"
-                        },
-                        new
-                        {
-                            ResourceTypeID = 9,
-                            Description = "FABRICATION TECHNICIAN",
-                            Rate = 145m,
-                            ResourceDescShort = "FT"
-                        },
-                        new
-                        {
-                            ResourceTypeID = 10,
-                            Description = "WELDER",
-                            Rate = 150m,
-                            ResourceDescShort = "WD"
-                        });
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.SubJobType", b =>
@@ -386,73 +315,6 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                     b.HasKey("SubJobID");
 
                     b.ToTable("SubJobTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            SubJobID = 1,
-                            Description = "Commissioning"
-                        },
-                        new
-                        {
-                            SubJobID = 2,
-                            Description = "Shutdown"
-                        },
-                        new
-                        {
-                            SubJobID = 3,
-                            Description = "SAT"
-                        },
-                        new
-                        {
-                            SubJobID = 4,
-                            Description = "General Support"
-                        },
-                        new
-                        {
-                            SubJobID = 5,
-                            Description = "Mechanical Install"
-                        },
-                        new
-                        {
-                            SubJobID = 6,
-                            Description = "Electrical Install"
-                        },
-                        new
-                        {
-                            SubJobID = 7,
-                            Description = "Startup/Commissioning"
-                        },
-                        new
-                        {
-                            SubJobID = 8,
-                            Description = "Engineering Discovery"
-                        },
-                        new
-                        {
-                            SubJobID = 9,
-                            Description = "Training Service"
-                        },
-                        new
-                        {
-                            SubJobID = 10,
-                            Description = "Audit/PM Service"
-                        },
-                        new
-                        {
-                            SubJobID = 11,
-                            Description = "Drawing Updates"
-                        },
-                        new
-                        {
-                            SubJobID = 12,
-                            Description = "Welding"
-                        },
-                        new
-                        {
-                            SubJobID = 13,
-                            Description = "Production Support"
-                        });
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.DailyReport", b =>
@@ -508,9 +370,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                 {
                     b.HasOne("ServiceRecord.Core.WebAPI.Models.Job", null)
                         .WithMany("JobCorrespondents")
-                        .HasForeignKey("JobID")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("JobID");
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.JobResourceType", b =>

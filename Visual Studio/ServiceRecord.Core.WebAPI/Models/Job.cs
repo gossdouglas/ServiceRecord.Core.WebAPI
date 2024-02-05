@@ -36,10 +36,12 @@ namespace ServiceRecord.Core.WebAPI.Models
 
         //a key of job id can have many job correspondents
         public virtual ICollection<JobCorrespondent>? JobCorrespondents { get; set; }
+
+
         //a key of job id can have many job sub jobs
         //public virtual ICollection<JobSubJob>? JobSubJobs { get; set; }
 
         public virtual ICollection<DailyReport>? DailyReports { get; set; }
-        public virtual ICollection<JobSubJob>? JobSubJob { get; set; }
+        public virtual ICollection<JobSubJobType>? JobSubJobTypes { get; set; }
     }
 }

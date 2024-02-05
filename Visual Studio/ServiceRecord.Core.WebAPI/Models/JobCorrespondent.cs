@@ -12,7 +12,9 @@ namespace ServiceRecord.Core.WebAPI.Models
         //a key of JobCorrespondentID can have only one JobID from table job
         [ForeignKey("JobID")]
         [StringLength(8)]
-        public string? JobID { get; set; }
+        public string JobID { get; set; }
+
+        //doesn't seem to be necessary.  i guess [ForeignKey("JobID")] handles things
         //public Job? Job { get; set; }
 
         [Required]

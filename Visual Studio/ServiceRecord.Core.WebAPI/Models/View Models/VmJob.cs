@@ -18,9 +18,9 @@ namespace ServiceRecord.Core.WebAPI.Models.View_Models
 
         //JOB SUB JOB
         //list of sub jobs to add to this job
-        public List<JobSubJob>? JobSubJobListAdd { get; set; }
+        public List<JobSubJobType>? JobSubJobTypeListAdd { get; set; }
         //list of sub jobs to add to this job
-        public List<JobSubJob>? JobSubJobListDelete { get; set; }
+        public List<JobSubJobType>? JobSubJobTypeListDelete { get; set; }
 
         //JOB RESOURCE TYPE
         //list of resources to add to this job

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using ServiceRecord.Core.WebAPI.DatabaseContext;
 
@@ -11,9 +12,10 @@ using ServiceRecord.Core.WebAPI.DatabaseContext;
 namespace ServiceRecord.Core.WebAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240205222028_Job-JobCspdts_fk_again")]
+    partial class JobJobCspdts_fk_again
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -386,73 +388,6 @@ namespace ServiceRecord.Core.WebAPI.Migrations
                     b.HasKey("SubJobID");
 
                     b.ToTable("SubJobTypes");
-
-                    b.HasData(
-                        new
-                        {
-                            SubJobID = 1,
-                            Description = "Commissioning"
-                        },
-                        new
-                        {
-                            SubJobID = 2,
-                            Description = "Shutdown"
-                        },
-                        new
-                        {
-                            SubJobID = 3,
-                            Description = "SAT"
-                        },
-                        new
-                        {
-                            SubJobID = 4,
-                            Description = "General Support"
-                        },
-                        new
-                        {
-                            SubJobID = 5,
-                            Description = "Mechanical Install"
-                        },
-                        new
-                        {
-                            SubJobID = 6,
-                            Description = "Electrical Install"
-                        },
-                        new
-                        {
-                            SubJobID = 7,
-                            Description = "Startup/Commissioning"
-                        },
-                        new
-                        {
-                            SubJobID = 8,
-                            Description = "Engineering Discovery"
-                        },
-                        new
-                        {
-                            SubJobID = 9,
-                            Description = "Training Service"
-                        },
-                        new
-                        {
-                            SubJobID = 10,
-                            Description = "Audit/PM Service"
-                        },
-                        new
-                        {
-                            SubJobID = 11,
-                            Description = "Drawing Updates"
-                        },
-                        new
-                        {
-                            SubJobID = 12,
-                            Description = "Welding"
-                        },
-                        new
-                        {
-                            SubJobID = 13,
-                            Description = "Production Support"
-                        });
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.DailyReport", b =>

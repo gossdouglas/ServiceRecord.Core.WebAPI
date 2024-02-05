@@ -126,9 +126,9 @@ namespace ServiceRecord.Core.WebAPI.Controllers
                 }
 
                 //save outrightly because there is no chance there will be a duplicate jobId and subJobId due to the logic above
-                if (data.JobSubJobListAdd != null && _context.JobSubJobs != null)
+                if (data.JobSubJobTypeListAdd != null && _context.JobSubJobTypes != null)
                 {
-                    _context.JobSubJobs.AddRange(data.JobSubJobListAdd);
+                    _context.JobSubJobTypes.AddRange(data.JobSubJobTypeListAdd);
                 }
 
                 //save outrightly because there is no chance there will be a duplicate jobId and subJobId due to the logic above
@@ -151,7 +151,7 @@ namespace ServiceRecord.Core.WebAPI.Controllers
                     return new ReturnObject<VmJob>() { Success = false, Data = null, Validated = true, Message = e.InnerException.ToString() };
             }
 
-            //save changes in the end
+            //save changes if there was no exception
             _context.SaveChanges();
 
             //return upon success
