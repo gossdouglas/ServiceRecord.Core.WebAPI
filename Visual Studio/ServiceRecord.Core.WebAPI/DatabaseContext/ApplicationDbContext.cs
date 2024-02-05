@@ -57,6 +57,12 @@ namespace ServiceRecord.Core.WebAPI.DatabaseContext
             //.HasForeignKey(e => e.CustomerId)
             //.IsRequired();
 
+            //modelBuilder.Entity<Job>()
+            //.HasMany(e => e.JobSubJob)
+            //.WithOne(e => e.Job)
+            //.HasForeignKey(e => e.JobID)
+            //.IsRequired();
+
         }
     }
 }

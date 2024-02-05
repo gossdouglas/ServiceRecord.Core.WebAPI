@@ -9,6 +9,9 @@ using ServiceRecord.Core.WebAPI.DatabaseContext;
 using ServiceRecord.Core.WebAPI.Models;
 using ServiceRecord.Core.WebAPI.Models.View_Models;
 
+//System.Diagnostics.Debug.WriteLine("get ready.");
+//System.Diagnostics.Debug.WriteLine(incomingDataCopy); 
+
 namespace ServiceRecord.Core.WebAPI.Controllers
 {
     [Route("api/[controller]")]
@@ -33,23 +36,40 @@ namespace ServiceRecord.Core.WebAPI.Controllers
             return await _context.Jobs.ToListAsync();
         }
 
-        // GET: api/Jobs/5
-        [HttpGet("{id}")]
-        public async Task<ActionResult<Job>> GetJob(string id)
-        {
-          if (_context.Jobs == null)
-          {
-              return NotFound();
-          }
-            var job = await _context.Jobs.FindAsync(id);
+        //[HttpGet]
+        //[Route("GetJobs")]
+        //public ReturnObject<List<Customer>> GetJobs()
+        //{
+        //    List<Customer> list = new List<Customer>();
 
-            if (job == null)
-            {
-                return NotFound();
-            }
+        //    if (_context.Customers == null)
+        //    {
+        //        //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
+        //        return new ReturnObject<List<Customer>>() { Success = false, Data = list, Validated = true, ReturnCode = 1 };
+        //    }
 
-            return job;
-        }
+        //    list = _context.Customers.ToList();
+
+        //    return new ReturnObject<List<Customer>>() { Success = true, Data = list, Validated = true };
+        //}
+
+        //// GET: api/Jobs/5
+        //[HttpGet("{id}")]
+        //public async Task<ActionResult<Job>> GetJob(string id)
+        //{
+        //  if (_context.Jobs == null)
+        //  {
+        //      return NotFound();
+        //  }
+        //    var job = await _context.Jobs.FindAsync(id);
+
+        //    if (job == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return job;
+        //}
 
         // PUT: api/Jobs/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -81,55 +101,11 @@ namespace ServiceRecord.Core.WebAPI.Controllers
 
             return NoContent();
         }
-
-        //// POST: api/Jobs
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPost]
-        //public async Task<ActionResult<Job>> PostJob(Job job)
-        //{
-        //  if (_context.Jobs == null)
-        //  {
-        //      return Problem("Entity set 'ApplicationDbContext.Jobs'  is null.");
-        //  }
-        //    _context.Jobs.Add(job);
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateException)
-        //    {
-        //        if (JobExists(job.JobID))
-        //        {
-        //            return Conflict();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return CreatedAtAction("GetJob", new { id = job.JobID }, job);
-        //}
-
-        //[HttpPost]
-        //[Route("AddJob")]
-        //public JsonResult AddJob()
-        //{
-        //    Job job = new Job();
-
-        //    job.Active = true;
-
-
-        //    return new JsonResult((new ReturnObject<Job>() { Success = false, Data = job, Validated = true }));
-        //}
-
+      
         [HttpPost]
         [Route("AddJob")]
         public ReturnObject<VmJob> AddJob(VmJob? data)
         {
-            VmJob incomingDataCopy = new VmJob();
-            incomingDataCopy = data;
-
             if (_context.Jobs == null)
             {
                 //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
@@ -142,8 +118,6 @@ namespace ServiceRecord.Core.WebAPI.Controllers
                 if (!JobExists(data.Job.JobID))
                 {
                     _context.Jobs.Add(data.Job);
-                    //_context.SaveChangesAsync();
-                    //_context.SaveChanges();
                 }
                 else
                 {
@@ -151,42 +125,23 @@ namespace ServiceRecord.Core.WebAPI.Controllers
                     return new ReturnObject<VmJob>() { Success = false, Data = data, Validated = true, ReturnCode = 3 };
                 }
 
-                if (data.JobSubJobAdd != null)
+                //save outrightly because there is no chance there will be a duplicate jobId and subJobId due to the logic above
+                if (data.JobSubJobAdd != null && _context.JobSubJobs != null)
                 {
-                    //foreach (JobSubJob item in data.JobSubJobAdd)
-                    //{                        
-                    //        _context.JobSubJobs.Add(item);
-                    //        _context.SaveChanges();                       
-                    //}
-
-                    foreach (JobSubJob item in data.JobSubJobAdd)
-                    {
-                        //save if doesn't exist
-                        if (!JobSubJobExists(item.JobID, item.SubJobID))
-                        {
-                            _context.JobSubJobs.Add(item);
-                            //_context.SaveChangesAsync();
-                            //_context.SaveChanges();
-                        }
-                        else
-                        {
-                            //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
-                            return new ReturnObject<VmJob>() { Success = false, Data = data, Validated = true, ReturnCode = 3 };
-                        }
-                    }
-
-                    //save changes to the JobSubJob table
-                    //_context.SaveChanges();
+                    _context.JobSubJobs.AddRange(data.JobSubJobAdd);
                 }
 
+                //save changes in the end
+                _context.SaveChanges();
             }
+            //return upon exception
             catch (DbUpdateException e)
             {               
                     return new ReturnObject<VmJob>() { Success = false, Data = data, Validated = true, Message = e.Message };
             }
-            _context.SaveChanges();
 
-            return new ReturnObject<VmJob>() { Success = true, Data = data, Validated = true };
+            //return upon success
+            return new ReturnObject<VmJob>() { Success = true, Data = null, Validated = true };
         }
 
         [HttpPost]
@@ -217,11 +172,16 @@ namespace ServiceRecord.Core.WebAPI.Controllers
             return (_context.Jobs?.Any(e => e.JobID == id)).GetValueOrDefault();
         }
 
-        private bool JobSubJobExists(string jobId, int subJobId)
-        {
-            //return whether there are any records in the JobSubJobs table that have the passed jobId and subJobId
-            return (_context.JobSubJobs?.Any(e => e.JobID == jobId)).GetValueOrDefault() 
-                && (_context.JobSubJobs?.Any(e => e.SubJobID == subJobId)).GetValueOrDefault();
-        }
+        //[HttpPost]
+        //[Route("AddJob")]
+        //public JsonResult AddJob()
+        //{
+        //    Job job = new Job();
+
+        //    job.Active = true;
+
+
+        //    return new JsonResult((new ReturnObject<Job>() { Success = false, Data = job, Validated = true }));
+        //}
     }
 }

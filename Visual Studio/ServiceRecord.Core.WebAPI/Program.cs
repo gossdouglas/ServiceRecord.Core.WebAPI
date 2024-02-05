@@ -12,11 +12,6 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Default"));
 });
 
-//added to solve a cycle problem that happened when the fk was added between Job and JobSubJob
-builder.Services.AddControllers().AddJsonOptions(x =>
-                x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-
-
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
