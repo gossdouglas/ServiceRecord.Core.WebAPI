@@ -38,7 +38,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
                     b.HasKey("CustomerId");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.DailyReport", b =>
@@ -86,7 +86,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
                     b.HasIndex("JobID");
 
-                    b.ToTable("DailyReport");
+                    b.ToTable("DailyReport", (string)null);
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.DailyReportTimeEntry", b =>
@@ -115,7 +115,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
                     b.HasIndex("DailyReportID");
 
-                    b.ToTable("DailyReportTimeEntrys");
+                    b.ToTable("DailyReportTimeEntrys", (string)null);
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.DailyReportTimeEntryUser", b =>
@@ -136,7 +136,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
                     b.HasIndex("DailyReportID");
 
-                    b.ToTable("DailyReportTimeEntryUsers");
+                    b.ToTable("DailyReportTimeEntryUsers", (string)null);
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.DailyReportUser", b =>
@@ -152,7 +152,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
                     b.HasKey("DailyReportID", "UserName");
 
-                    b.ToTable("DailyReportUsers");
+                    b.ToTable("DailyReportUsers", (string)null);
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.Job", b =>
@@ -197,7 +197,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
                     b.HasIndex("CustomerId");
 
-                    b.ToTable("Jobs");
+                    b.ToTable("Jobs", (string)null);
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.JobCorrespondent", b =>
@@ -230,7 +230,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
                     b.HasIndex("JobID");
 
-                    b.ToTable("JobCorrespondents");
+                    b.ToTable("JobCorrespondents", (string)null);
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.JobResourceType", b =>
@@ -252,7 +252,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
                     b.HasIndex("ResourceTypeID");
 
-                    b.ToTable("JobResourceTypes");
+                    b.ToTable("JobResourceTypes", (string)null);
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.JobSubJobType", b =>
@@ -270,7 +270,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
                     b.HasIndex("SubJobID");
 
-                    b.ToTable("JobSubJobTypes");
+                    b.ToTable("JobSubJobTypes", (string)null);
                 });
 
             modelBuilder.Entity("ServiceRecord.Core.WebAPI.Models.ResourceType", b =>
@@ -295,7 +295,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
                     b.HasKey("ResourceTypeID");
 
-                    b.ToTable("ResourceTypes");
+                    b.ToTable("ResourceTypes", (string)null);
 
                     b.HasData(
                         new
@@ -385,7 +385,7 @@ namespace ServiceRecord.Core.WebAPI.Migrations
 
                     b.HasKey("SubJobID");
 
-                    b.ToTable("SubJobTypes");
+                    b.ToTable("SubJobTypes", (string)null);
 
                     b.HasData(
                         new

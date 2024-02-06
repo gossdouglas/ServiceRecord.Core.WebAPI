@@ -10,15 +10,18 @@ namespace ServiceRecord.Core.WebAPI.Models
         [Key]
         [StringLength(4)]
         public string CustomerId { get; set; } = string.Empty;
+        
+        [StringLength(50)]
+        public string? CustomerName { get; set; }
+
+        [StringLength(50)]
+        public string? CustomerAddress { get; set; }
+
+
         //one CustomerId can have many jobs
         //Collection navigation containing dependents
         public ICollection<Job> Jobs { get; } = new List<Job>();
         //https://learn.microsoft.com/en-us/ef/core/modeling/relationships/one-to-many
 
-        [StringLength(50)]
-        public string? CustomerName { get; set; }
-
-        [StringLength(50)]
-        public string? CustomerAddress { get; set; }      
     }
 }

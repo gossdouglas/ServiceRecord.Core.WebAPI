@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ServiceRecord.Core.WebAPI.DatabaseContext;
 using ServiceRecord.Core.WebAPI.Models;
 using ServiceRecord.Core.WebAPI.Models.View_Models;
+using ServiceRecord.Core.WebAPI.Models.View_Models.JobVms;
 
 //System.Diagnostics.Debug.WriteLine("get ready.");
 //System.Diagnostics.Debug.WriteLine(incomingDataCopy); 
@@ -25,51 +26,34 @@ namespace ServiceRecord.Core.WebAPI.Controllers
             _context = context;
         }
 
-        // GET: api/Jobs
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Job>>> GetJobs()
+        [Route("GetJobs")]
+        public ReturnObject<VmGetJobs> GetJobs()
         {
-          if (_context.Jobs == null)
-          {
-              return NotFound();
-          }
-            return await _context.Jobs.ToListAsync();
+            //create an object for return
+            VmGetJobs jobsReturn = new VmGetJobs();
+
+            try
+            {
+                //get a list of all jobs
+                jobsReturn.JobList = _context.Jobs.ToList();
+                //get a list of all sub job types
+                jobsReturn.SubJobTypeList = _context.SubJobTypes.ToList();
+                //get a list of all resource types
+                jobsReturn.ResourceTypeList = _context.ResourceTypes.ToList();  
+                //get a list of all customers
+                jobsReturn.CustomerList = _context.Customers.ToList();                          
+            }
+
+            //return upon exception
+            catch (DbUpdateException e)
+            {
+                return new ReturnObject<VmGetJobs>() { Success = false, Data = null, Validated = true, Message = e.InnerException.ToString() };
+            }
+
+            //return upon success
+            return new ReturnObject<VmGetJobs>() { Success = true, Data = jobsReturn, Validated = true };
         }
-
-        //[HttpGet]
-        //[Route("GetJobs")]
-        //public ReturnObject<List<Customer>> GetJobs()
-        //{
-        //    List<Customer> list = new List<Customer>();
-
-        //    if (_context.Customers == null)
-        //    {
-        //        //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
-        //        return new ReturnObject<List<Customer>>() { Success = false, Data = list, Validated = true, ReturnCode = 1 };
-        //    }
-
-        //    list = _context.Customers.ToList();
-
-        //    return new ReturnObject<List<Customer>>() { Success = true, Data = list, Validated = true };
-        //}
-
-        //// GET: api/Jobs/5
-        //[HttpGet("{id}")]
-        //public async Task<ActionResult<Job>> GetJob(string id)
-        //{
-        //  if (_context.Jobs == null)
-        //  {
-        //      return NotFound();
-        //  }
-        //    var job = await _context.Jobs.FindAsync(id);
-
-        //    if (job == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return job;
-        //}
 
         // PUT: api/Jobs/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -104,12 +88,12 @@ namespace ServiceRecord.Core.WebAPI.Controllers
       
         [HttpPost]
         [Route("AddJob")]
-        public ReturnObject<VmJob> AddJob(VmJob? data)
+        public ReturnObject<VmAddJob> AddJob(VmAddJob? data)
         {
             if (_context.Jobs == null)
             {
                 //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
-                return new ReturnObject<VmJob>() { Success = false, Data = data, Validated = true, ReturnCode = 1 };
+                return new ReturnObject<VmAddJob>() { Success = false, Data = data, Validated = true, ReturnCode = 1 };
             }
 
             try
@@ -122,7 +106,7 @@ namespace ServiceRecord.Core.WebAPI.Controllers
                 else
                 {
                     //code 1- target table does not exist, code 2- target does not exist, code 3- target already exists
-                    return new ReturnObject<VmJob>() { Success = false, Data = data, Validated = true, ReturnCode = 3 };
+                    return new ReturnObject<VmAddJob>() { Success = false, Data = data, Validated = true, ReturnCode = 3 };
                 }
 
                 //save outrightly because there is no chance there will be a duplicate jobId and subJobId due to the logic above
@@ -148,14 +132,14 @@ namespace ServiceRecord.Core.WebAPI.Controllers
             //return upon exception
             catch (DbUpdateException e)
             {               
-                    return new ReturnObject<VmJob>() { Success = false, Data = null, Validated = true, Message = e.InnerException.ToString() };
+                    return new ReturnObject<VmAddJob>() { Success = false, Data = null, Validated = true, Message = e.InnerException.ToString() };
             }
 
             //save changes if there was no exception
             _context.SaveChanges();
 
             //return upon success
-            return new ReturnObject<VmJob>() { Success = true, Data = null, Validated = true };
+            return new ReturnObject<VmAddJob>() { Success = true, Data = null, Validated = true };
         }
 
         [HttpPost]
