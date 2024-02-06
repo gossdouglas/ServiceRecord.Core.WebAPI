@@ -55,37 +55,85 @@ namespace ServiceRecord.Core.WebAPI.Controllers
             return new ReturnObject<VmGetJobs>() { Success = true, Data = jobsReturn, Validated = true };
         }
 
-        // PUT: api/Jobs/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutJob(string id, Job job)
+        //// PUT: api/Jobs/5
+        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        //[HttpPut("{id}")]
+        //public async Task<IActionResult> PutJob(string id, Job job)
+        //{
+        //    if (id != job.JobID)
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    _context.Entry(job).State = EntityState.Modified;
+
+        //    try
+        //    {
+        //        await _context.SaveChangesAsync();
+        //    }
+        //    catch (DbUpdateConcurrencyException)
+        //    {
+        //        if (!JobExists(id))
+        //        {
+        //            return NotFound();
+        //        }
+        //        else
+        //        {
+        //            throw;
+        //        }
+        //    }
+
+        //    return NoContent();
+        //}
+
+        [HttpPost]
+        [Route("UpdateJob")]
+        public ReturnObject<VmEditJob> UpdateJob(VmEditJob? data)
         {
-            if (id != job.JobID)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(job).State = EntityState.Modified;
-
             try
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!JobExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+                //EDIT
+                _context.Entry(data.Job).State = EntityState.Modified;//works
+                _context.Entry(data.ResourceTypeListEdit).State = EntityState.Modified;//
 
-            return NoContent();
+
+                //ADD
+                //save outrightly because there is no chance there will be a duplicate jobId and subJobId due to the logic above
+                if (data.JobSubJobTypeListAdd != null && _context.JobSubJobTypes != null)
+                {
+                    _context.JobSubJobTypes.AddRange(data.JobSubJobTypeListAdd);
+                }
+
+                //save outrightly because there is no chance there will be a duplicate jobId and subJobId due to the logic above
+                if (data.ResourceTypeListAdd != null && _context.ResourceTypes != null)
+                {
+                    _context.ResourceTypes.AddRange(data.ResourceTypeListAdd);
+                }
+
+                //DELETE
+                //save outrightly because there is no chance there will be a duplicate jobId and subJobId due to the logic above
+                if (data.JobSubJobTypeListDelete != null && _context.JobSubJobTypes != null)
+                {
+                    _context.JobSubJobTypes.RemoveRange(data.JobSubJobTypeListDelete);
+                }
+
+                //save outrightly because there is no chance there will be a duplicate jobId and subJobId due to the logic above
+                if (data.ResourceTypeListDelete != null && _context.ResourceTypes != null)
+                {
+                    _context.ResourceTypes.RemoveRange(data.ResourceTypeListDelete);
+                }
+
+            }
+            catch (DbUpdateConcurrencyException e)
+            {
+                return new ReturnObject<VmEditJob>() { Success = false, Data = null, Validated = true, Message = e.Message };
+            }
+           
+            _context.SaveChanges();
+
+            return new ReturnObject<VmEditJob>() { Success = true, Data = null, Validated = true };
         }
-      
+
         [HttpPost]
         [Route("AddJob")]
         public ReturnObject<VmAddJob> AddJob(VmAddJob? data)
