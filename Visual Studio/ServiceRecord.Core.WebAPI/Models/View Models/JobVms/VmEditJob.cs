@@ -10,9 +10,9 @@
 
         //JOB RESOURCE TYPE
         //list of resources to to delete for this job
-        public List<ResourceType>? ResourceTypeListDelete { get; set; }
+        public List<JobResourceType>? JobResourceTypeListDelete { get; set; }
         //list of resources to edit for this job
-        public List<ResourceType>? ResourceTypeListEdit { get; set; }
+        public List<JobResourceType>? JobResourceTypeListEdit { get; set; }
 
         //JOB CORRESPONDENT
         //list of correspondents to delete for this job

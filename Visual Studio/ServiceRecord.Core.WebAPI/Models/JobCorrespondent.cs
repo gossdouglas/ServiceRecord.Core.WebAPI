@@ -5,10 +5,11 @@ namespace ServiceRecord.Core.WebAPI.Models
 {
     public class JobCorrespondent
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int JobCorrespondentID { get; set; }
+        //[Key]
+        //[DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        //public int JobCorrespondentID { get; set; }
 
+        [Key]
         //a key of JobCorrespondentID can have only one JobID from table job
         [ForeignKey("JobID")]
         [StringLength(8)]
@@ -21,9 +22,11 @@ namespace ServiceRecord.Core.WebAPI.Models
         [StringLength(50)]
         public string? Name { get; set; }
 
-        [Required]
+        [Key]
+        //[Required]
         [StringLength(50)]
-        public string? Email { get; set; }
+        //public string? Email { get; set; }
+        public string Email { get; set; }
 
         public bool Active { get; set; }
     }

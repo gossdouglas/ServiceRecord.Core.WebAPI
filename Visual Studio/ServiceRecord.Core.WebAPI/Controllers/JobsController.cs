@@ -55,72 +55,68 @@ namespace ServiceRecord.Core.WebAPI.Controllers
             return new ReturnObject<VmGetJobs>() { Success = true, Data = jobsReturn, Validated = true };
         }
 
-        //// PUT: api/Jobs/5
-        //// To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        //[HttpPut("{id}")]
-        //public async Task<IActionResult> PutJob(string id, Job job)
-        //{
-        //    if (id != job.JobID)
-        //    {
-        //        return BadRequest();
-        //    }
-
-        //    _context.Entry(job).State = EntityState.Modified;
-
-        //    try
-        //    {
-        //        await _context.SaveChangesAsync();
-        //    }
-        //    catch (DbUpdateConcurrencyException)
-        //    {
-        //        if (!JobExists(id))
-        //        {
-        //            return NotFound();
-        //        }
-        //        else
-        //        {
-        //            throw;
-        //        }
-        //    }
-
-        //    return NoContent();
-        //}
-
         [HttpPost]
         [Route("UpdateJob")]
         public ReturnObject<VmEditJob> UpdateJob(VmEditJob? data)
         {
             try
             {
-                //EDIT
-                _context.Entry(data.Job).State = EntityState.Modified;//works
-                _context.Entry(data.ResourceTypeListEdit).State = EntityState.Modified;//
+                //EDIT-EDIT-EDIT-EDIT-EDIT-EDIT-EDIT-EDIT-EDIT-EDIT-EDIT-EDIT-EDIT-EDIT-EDIT
 
+                //JOB
+                if (data.Job != null)
+                {
+                    _context.Entry(data.Job).State = EntityState.Modified;
+                }
+                //JobResourceTypes
+                if (_context.JobResourceTypes != null && data.JobResourceTypeListEdit != null)
+                {
+                    _context.JobResourceTypes.UpdateRange(data.JobResourceTypeListEdit);
+                }
+                //JobCorrespondents
+                if (_context.JobCorrespondents != null && data.JobCorrespondentListEdit != null)
+                {
+                    _context.JobCorrespondents.UpdateRange(data.JobCorrespondentListEdit);
+                }
 
-                //ADD
-                //save outrightly because there is no chance there will be a duplicate jobId and subJobId due to the logic above
+                //ADD-ADD-ADD-ADD-ADD-ADD-ADD-ADD-ADD-ADD-ADD-ADD-ADD-ADD-ADD-ADD-ADD-ADD
+
+                //JobSubJobTypes
                 if (data.JobSubJobTypeListAdd != null && _context.JobSubJobTypes != null)
                 {
                     _context.JobSubJobTypes.AddRange(data.JobSubJobTypeListAdd);
                 }
 
-                //save outrightly because there is no chance there will be a duplicate jobId and subJobId due to the logic above
-                if (data.ResourceTypeListAdd != null && _context.ResourceTypes != null)
+                //JobResourceTypes
+                if (data.JobResourceTypeListAdd != null && _context.JobResourceTypes != null)
                 {
-                    _context.ResourceTypes.AddRange(data.ResourceTypeListAdd);
+                    _context.JobResourceTypes.AddRange(data.JobResourceTypeListAdd);
                 }
 
-                //DELETE
-                //save outrightly because there is no chance there will be a duplicate jobId and subJobId due to the logic above
+                //JobCorrespondents
+                if (data.JobCorrespondentListAdd != null && _context.JobCorrespondents != null)
+                {
+                    _context.JobCorrespondents.AddRange(data.JobCorrespondentListAdd);
+                }
+
+                //DELETE-DELETE-DELETE-DELETE-DELETE-DELETE-DELETE-DELETE-DELETE-DELETE-DELETE
+
+                //JobSubJobTypes
                 if (data.JobSubJobTypeListDelete != null && _context.JobSubJobTypes != null)
                 {
                     _context.JobSubJobTypes.RemoveRange(data.JobSubJobTypeListDelete);
                 }
 
-                //save outrightly because there is no chance there will be a duplicate jobId and subJobId due to the logic above
-                if (data.ResourceTypeListDelete != null && _context.ResourceTypes != null)
+                //JobResourceTypes
+                if (data.JobResourceTypeListDelete != null && _context.JobResourceTypes != null)
                 {
-                    _context.ResourceTypes.RemoveRange(data.ResourceTypeListDelete);
+                    _context.JobResourceTypes.RemoveRange(data.JobResourceTypeListDelete);
+                }
+
+                //JobCorrespondents
+                if (data.JobCorrespondentListDelete != null && _context.JobCorrespondents != null)
+                {
+                    _context.JobCorrespondents.RemoveRange(data.JobCorrespondentListDelete);
                 }
 
             }

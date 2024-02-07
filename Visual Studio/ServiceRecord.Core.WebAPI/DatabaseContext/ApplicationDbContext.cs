@@ -51,6 +51,10 @@ namespace ServiceRecord.Core.WebAPI.DatabaseContext
             modelBuilder.Entity<DailyReportTimeEntryUser>()
             .HasKey(x => new { x.TimeEntryID, x.UserName });
 
+            //Composite primary keys can only be set using 'HasKey' in 'OnModelCreating'
+            modelBuilder.Entity<JobCorrespondent>()
+            .HasKey(x => new { x.JobID, x.Email });
+
             //modelBuilder.Entity<Customer>()
             //.HasMany(e => e.Jobs)
             //.WithOne(e => e.Customer)
